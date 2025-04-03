@@ -2,15 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 
-
 export interface LoginRequest {
-  username: string;
+    correo: string;
   password: string;
 }
 
 export interface LoginResponse {
   accessToken: string;
   tokenType: string;
+  nombreUsuario: string; // Se espera que el backend devuelva el nombre del usuario
 }
 
 @Injectable({
@@ -23,16 +23,25 @@ export class AuthService {
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(this.loginUrl, credentials).pipe(
-      tap(response => localStorage.setItem('accessToken', response.accessToken))
+      tap(response => {
+        // Guardamos el token y el nombre del usuario en Session Storage
+        sessionStorage.setItem('accessToken', response.accessToken);
+        sessionStorage.setItem('nombreUsuario', response.nombreUsuario);
+      })
     );
   }
 
   logout(): void {
-    localStorage.removeItem('accessToken');
+    sessionStorage.removeItem('accessToken');
+    sessionStorage.removeItem('nombreUsuario');
   }
 
   getToken(): string | null {
-    return localStorage.getItem('accessToken');
+    return sessionStorage.getItem('accessToken');
+  }
+
+  getNombreUsuario(): string | null {
+    return sessionStorage.getItem('nombreUsuario');
   }
 
   isAuthenticated(): boolean {

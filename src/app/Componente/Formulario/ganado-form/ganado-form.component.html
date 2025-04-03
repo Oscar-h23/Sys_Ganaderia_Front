@@ -1,43 +1,275 @@
-<div class="container mt-5">
-    <h2 class="text-center text-primary">Gestión de Ganado</h2>
-
-    <!-- Botón para abrir el modal -->
-    <div class="text-end">
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalGanado" onclick="showAlert()">
-            Agregar Ganado
-        </button>
+<div class="container mt-4">
+    <h2>Gestión de Ganado</h2>
+  
+    <!-- Botón para abrir el modal de agregar -->
+    <button
+      class="btn btn-primary"
+      data-bs-toggle="modal"
+      data-bs-target="#modalAgregarEditar"
+      (click)="abrirModalAgregar()"
+    >
+      ➕ Agregar Ganado
+    </button>
+  
+    <!-- Botón para mostrar el modal de ganado cerca del límite -->
+    <button class="btn btn-warning" (click)="obtenerGanadoCercaLimite()">
+      🔔 Ver Ganado Cerca del Límite
+    </button>
+  
+    <!-- Tabla de ganado -->
+    <!-- 🐄 Tabla de Ganado Registrado -->
+    <div class="table-responsive mt-4">
+      <table class="table table-striped table-hover">
+        <thead class="table-dark">
+          <tr>
+            <th>Código Único</th>
+            <th>Raza</th>
+            <th>Peso (kg)</th>
+            <th>Corral</th>
+            <th>Días Registrados</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ganado of ganados">
+            <td>{{ ganado.codigoUnico }}</td>
+            <td>{{ ganado.raza }}</td>
+            <td>{{ ganado.peso }}</td>
+            <td>{{ ganado.corral?.nombre || "No asignado" }}</td>
+            <td
+              [ngClass]="{
+                'text-warning fw-bold': ganado.tiempo >= 80 && ganado.tiempo < 85,
+                'text-danger fw-bold': ganado.tiempo >= 85
+              }"
+            >
+              ⏳ {{ ganado.tiempo }} días
+            </td>
+            <td>
+              <button
+                class="btn btn-sm btn-warning me-2"
+                (click)="editarGanado(ganado)"
+              >
+                ✏️ Editar
+              </button>
+              <button
+                class="btn btn-sm btn-danger"
+                *ngIf="ganado.id !== undefined && ganado.id !== null"
+                (click)="eliminarGanado(ganado.id)"
+              >
+                🗑 Eliminar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-
-    <!-- Tabla de Ganado Registrado -->
-    <div class="mt-4">
-        <table class="table table-striped table-hover shadow">
-            <thead class="table-dark">
-                <tr>
-                    <th>Código</th>
-                    <th>Corral</th>
-                    <th>Peso (kg)</th>
-                    <th>Raza</th>
-                    <th>Estado de Salud</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>GND001</td>
-                    <td>Corral 1</td>
-                    <td>450</td>
-                    <td>Angus</td>
-                    <td>Sano</td>
-                    <td>
-                        <!-- Botón para abrir el modal en modo edición -->
-                        <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalGanado">✏️</button>
-                        <button class="btn btn-outline-danger btn-sm">🗑️</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+  
+    <!-- 🐄 Modal Agregar/Editar Ganado -->
+    <div
+      class="modal fade"
+      id="modalAgregarEditar"
+      tabindex="-1"
+      aria-labelledby="modalAgregarEditarLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              {{ esNuevo ? "Agregar Ganado" : "Editar Ganado" }}
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+  
+          <div class="modal-body">
+            <form>
+              <!-- Código Único -->
+              <div class="mb-3">
+                <label for="codigoUnico" class="form-label">Código Único</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="codigoUnico"
+                  [(ngModel)]="ganadoSeleccionado.codigoUnico"
+                  name="codigoUnico"
+                  required
+                  [ngModelOptions]="{ standalone: true }"
+                />
+              </div>
+  
+              <!-- Raza -->
+              <div class="mb-3">
+                <label for="raza" class="form-label">Raza</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="raza"
+                  [(ngModel)]="ganadoSeleccionado.raza"
+                  name="raza"
+                  required
+                  [ngModelOptions]="{ standalone: true }"
+                />
+              </div>
+  
+              <!-- Peso -->
+              <div class="mb-3">
+                <label for="peso" class="form-label">Peso (kg)</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="peso"
+                  [(ngModel)]="ganadoSeleccionado.peso"
+                  name="peso"
+                  required
+                  min="1"
+                  [ngModelOptions]="{ standalone: true }"
+                />
+              </div>
+  
+              <!-- Establo -->
+              <div class="mb-3">
+                <label for="establo" class="form-label">Establo</label>
+                <select
+                  class="form-control"
+                  id="establo"
+                  [(ngModel)]="establoSeleccionado"
+                  (change)="obtenerCorralesPorEstablo()"
+                  name="establo"
+                  required
+                  [ngModelOptions]="{ standalone: true }"
+                >
+                  <option *ngFor="let establo of establos" [value]="establo.id">
+                    {{ establo.nombre }}
+                  </option>
+                </select>
+              </div>
+  
+              <!-- Corral (ComboBox) -->
+              <div class="mb-3">
+                <label for="corral" class="form-label">Corral</label>
+                <select
+                  class="form-control"
+                  id="corral"
+                  [(ngModel)]="ganadoSeleccionado.corral"
+                  name="corral"
+                  required
+                  [ngModelOptions]="{ standalone: true }"
+                >
+                  <option *ngFor="let corral of corrales" [ngValue]="corral">
+                    {{ corral.nombre }}
+                  </option>
+                </select>
+              </div>
+            </form>
+          </div>
+  
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="guardarGanado()"
+            >
+              💾 Guardar
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <!-- Incluir el componente del modal -->
-    <app-ganado-modal></app-ganado-modal>
-</div>
+  
+    <!-- 🚨 Modal Ganado Cerca del Límite -->
+    <div
+    class="modal fade"
+    id="modalGanadoCercaLimite"
+    tabindex="-1"
+    aria-labelledby="modalGanadoCercaLimiteLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title">🔔 Notificaciones de Ganado</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+  
+        <div class="modal-body">
+          <div class="container">
+            <div class="row">
+              <div class="col-12">
+                <div
+                  class="card mb-3"
+                  *ngFor="let ganado of ganadoCercaLimite"
+                  [ngClass]="{
+                    'border-warning': ganado.tiempo >= 80 && ganado.tiempo < 85,
+                    'border-danger': ganado.tiempo >= 85
+                  }"
+                >
+                  <div class="card-body">
+                    <div class="d-flex align-items-center">
+                      <div class="me-3">
+                        <i
+                          class="bi bi-exclamation-triangle-fill fs-2"
+                          [ngClass]="{
+                            'text-warning': ganado.tiempo >= 80 && ganado.tiempo < 85,
+                            'text-danger': ganado.tiempo >= 85
+                          }"
+                        ></i>
+                      </div>
+                      <div>
+                        <h4
+                          class="fw-bold"
+                          [ngClass]="{
+                            'text-warning': ganado.tiempo >= 80 && ganado.tiempo < 85,
+                            'text-danger': ganado.tiempo >= 85
+                          }"
+                        >
+                          ⏳ {{ ganado.tiempo }} días
+                        </h4>
+                        <p>
+                          <strong>Código:</strong> {{ ganado.codigoUnico }} <br />
+                          <strong>Raza:</strong> {{ ganado.raza }} <br />
+                          <strong>Peso:</strong> {{ ganado.peso }} kg <br />
+                          <strong>Corral:</strong>
+                          {{ ganado.corral?.nombre || "Sin asignar" }}
+                        </p>
+                        <hr />
+                        <small class="mb-0 text-muted"
+                          >📅 Registrado el: {{ ganado.fechaRegistro }}</small
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,32 @@
+.contenedor-usuarios {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  .mat-card {
+    width: 100%;
+    max-width: 900px;
+    padding: 20px;
+  }
+  
+  .mat-toolbar {
+    display: flex;
+  }
+  
+  .spacer {
+    flex: 1;
+  }
+  
+  .busqueda {
+    display: flex;
+    gap: 10px;
+    padding: 10px 0;
+    align-items: center;
+  }
+  
+  .tabla-usuarios {
+    width: 100%;
+  }
+  
+  

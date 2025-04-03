@@ -12,7 +12,7 @@ import { NgIf } from '@angular/common';
   imports: [FormsModule, NgIf]
 })
 export class LoginComponent {
-  credentials: LoginRequest = { username: '', password: '' };
+  credentials: LoginRequest = { correo: '', password: '' };
   errorMessage: string = '';
 
   constructor(private authService: AuthService, private router: Router) {}
@@ -20,6 +20,7 @@ export class LoginComponent {
   ingresar(): void {
     this.authService.login(this.credentials).subscribe({
       next: () => {
+        
         this.router.navigate(['/dashboard']);
       },
       error: err => {

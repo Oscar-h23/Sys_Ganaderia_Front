@@ -1,0 +1,61 @@
+<div class="container p-4 bg-light shadow rounded">
+    <h2 class="mb-4 text-center text-primary">Editar Usuario</h2>
+  
+    <form (ngSubmit)="actualizarUsuario()">
+      <div class="row">
+        <!-- Columna 1 -->
+        <div class="col-md-6">
+          <!-- Nombre -->
+          <div class="mb-3">
+            <label class="form-label">Nombre:</label>
+            <input type="text" class="form-control" [(ngModel)]="usuario.nombre" name="nombre" required />
+          </div>
+  
+          <!-- Correo -->
+          <div class="mb-3">
+            <label class="form-label">Correo:</label>
+            <input type="email" class="form-control" [(ngModel)]="usuario.correo" name="correo" required />
+          </div>
+  
+          <!-- Teléfono -->
+          <div class="mb-3">
+            <label class="form-label">Teléfono:</label>
+            <input type="text" class="form-control" [(ngModel)]="usuario.telefono" name="telefono" />
+          </div>
+        </div>
+  
+        <!-- Columna 2 -->
+        <div class="col-md-6">
+          <!-- Dirección -->
+          <div class="mb-3">
+            <label class="form-label">Dirección:</label>
+            <input type="text" class="form-control" [(ngModel)]="usuario.direccion" name="direccion" />
+          </div>
+  
+          <!-- Rol -->
+          <div class="mb-3">
+            <label class="form-label">Rol:</label>
+            <select class="form-select" [(ngModel)]="usuario.rol.id" name="rol" required>
+              <option *ngFor="let rol of roles" [value]="rol.id">{{ rol.nombre }}</option>
+            </select>
+          </div>
+  
+          <!-- Estado -->
+          <div class="mb-3">
+            <label class="form-label">Estado:</label>
+            <select class="form-select" [(ngModel)]="usuario.estado" name="estado">
+              <option [value]="true">Activo</option>
+              <option [value]="false">Inactivo</option>
+            </select>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Botones -->
+      <div class="d-flex justify-content-end gap-2">
+        <button type="submit" class="btn btn-primary">Actualizar</button>
+        <button type="button" class="btn btn-secondary" (click)="cerrarModal()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+  

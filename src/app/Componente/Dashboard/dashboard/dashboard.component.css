@@ -10,7 +10,6 @@ body {
 .dashboard-container {
   display: flex;
   height: 100vh; /* Vista completa */
-  overflow: hidden;
 }
 
 /* Sidebar */
@@ -112,6 +111,8 @@ body {
   padding: 20px;
   transition: margin-left 0.3s ease-in-out;
   margin-left: 250px; /* Ajuste para la barra lateral */
+  height: 100vh;
+  overflow-y: auto; /* Habilitar scroll solo en el contenido */
 }
 
 /* Ajustar el contenido cuando la barra está cerrada */

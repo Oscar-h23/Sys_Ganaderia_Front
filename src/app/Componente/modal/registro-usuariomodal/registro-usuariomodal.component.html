@@ -1,57 +1,82 @@
-<!-- MODAL -->
-<div #modalRegistroUsuario class="modal fade" id="modalRegistroUsuario" tabindex="-1" aria-labelledby="modalRegistroUsuarioLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered"> <!-- Agregamos modal-dialog-centered -->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalRegistroUsuarioLabel">Registrar Usuario</h5>
-        
+<div class="container mt-4 pb-4"> <!-- Se agregó padding-bottom -->
+    <h2 class="text-center">{{ usuarioId ? 'Editar Usuario' : 'Registrar Usuario' }}</h2>
+  
+    <form [formGroup]="usuarioForm" (ngSubmit)="usuarioId ? onEditar() : onRegistrar()">
+      <div class="row">
+        <!-- Primera columna -->
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label class="form-label">Nombre:</label>
+            <input type="text" class="form-control" formControlName="nombre" placeholder="Ingrese el nombre" required>
+            <div class="text-danger small" *ngIf="usuarioForm.get('nombre')?.invalid && usuarioForm.get('nombre')?.touched">
+              El nombre es obligatorio.
             </div>
-            <div class="modal-body">
-                <!-- Formulario -->
-                <form>
-                    <div class="mb-2">
-                        <label for="edit-nombre" class="form-label">Nombre:</label>
-                        <input type="text" id="edit-nombre" class="form-control form-control-sm" required>
-                    </div>
-                    <div class="mb-2">
-                        <label for="edit-correo" class="form-label">Correo:</label>
-                        <input type="email" id="edit-correo" class="form-control form-control-sm" required>
-                    </div>
-                    <div class="mb-2">
-                        <label for="edit-contrasena" class="form-label">Contraseña:</label>
-                        <input type="password" id="edit-contrasena" class="form-control form-control-sm" required>
-                    </div>
-                    <div class="mb-2">
-                        <label for="edit-telefono" class="form-label">Teléfono:</label>
-                        <input type="text" id="edit-telefono" class="form-control form-control-sm">
-                    </div>
-                    <div class="mb-2">
-                        <label for="edit-direccion" class="form-label">Dirección:</label>
-                        <textarea id="edit-direccion" class="form-control form-control-sm"></textarea>
-                    </div>
-                    <div class="mb-2">
-                        <label for="edit-rol" class="form-label">Rol:</label>
-                        <select id="edit-rol" class="form-control form-control-sm" required>
-                            <option value="">Seleccione...</option>
-                            <option value="1">Administrador</option>
-                            <option value="2">Cliente</option>
-                            <option value="3">Proveedor</option>
-                            <option value="4">Veterinario</option>
-                        </select>
-                    </div>
-                    <div class="mb-2">
-                        <label for="edit-estado" class="form-label">Estado:</label>
-                        <select id="edit-estado" class="form-control form-control-sm">
-                            <option value="activo" selected>Activo</option>
-                            <option value="inactivo">Inactivo</option>
-                        </select>
-                    </div>
-                </form>
+          </div>
+  
+          <div class="mb-3">
+            <label class="form-label">Correo:</label>
+            <input type="email" class="form-control" formControlName="correo" placeholder="Ingrese el correo" required>
+            <div class="text-danger small" *ngIf="usuarioForm.get('correo')?.invalid && usuarioForm.get('correo')?.touched">
+              Ingrese un correo válido.
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn-sm">Cancelar</button>
-                <button type="button" class="btn btn-success btn-sm">Guardar</button>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Contraseña:</label>
+            <input type="password" class="form-control" formControlName="contrasena" placeholder="Ingrese la contraseña" required>
+            <div class="text-danger small" *ngIf="usuarioForm.get('contrasena')?.invalid && usuarioForm.get('contrasena')?.touched">
+              La contraseña es obligatoria.
             </div>
+          </div>
+  
+          <div class="mb-3">
+            <label class="form-label">Teléfono:</label>
+            <input type="text" class="form-control" formControlName="telefono" placeholder="Ingrese el teléfono" required>
+            <div class="text-danger small" *ngIf="usuarioForm.get('telefono')?.invalid && usuarioForm.get('telefono')?.touched">
+              El teléfono es obligatorio.
+            </div>
+          </div>
         </div>
-    </div>
-</div>
+  
+        <!-- Segunda columna -->
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label class="form-label">Dirección:</label>
+            <input type="text" class="form-control" formControlName="direccion" placeholder="Ingrese la dirección" required>
+            <div class="text-danger small" *ngIf="usuarioForm.get('direccion')?.invalid && usuarioForm.get('direccion')?.touched">
+              La dirección es obligatoria.
+            </div>
+          </div>
+  
+          
+  
+          <div class="mb-3">
+            <label class="form-label">Rol:</label>
+            <select class="form-select" formControlName="rol" required>
+              <option *ngFor="let rol of roles" [value]="rol.id">{{ rol.nombre }}</option>
+            </select>
+            <div class="text-danger small" *ngIf="usuarioForm.get('rol')?.invalid && usuarioForm.get('rol')?.touched">
+              Seleccione un rol.
+            </div>
+          </div>
+  
+          <div class="mb-3">
+            <label class="form-label">Estado:</label>
+            <select class="form-select" formControlName="estado">
+              <option [value]="true">Activo</option>
+              <option [value]="false">Inactivo</option>
+            </select>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Botones con mayor margen inferior -->
+      <div class="text-center mt-4 pb-4">
+        <button type="submit" class="btn btn-primary me-2">
+          {{ usuarioId ? 'Actualizar' : 'Registrar' }}
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="onCancelar()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+  

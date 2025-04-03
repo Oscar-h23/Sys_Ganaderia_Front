@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component , OnInit} from '@angular/core';
 import { MatIconModule } from '@angular/material/icon'; // Importar Angular Material Icons
 import { NgIf, NgFor } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -15,10 +15,15 @@ import { Router } from '@angular/router';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit{
+  nombreUsuario: string | null = '';
   isSidebarClosed = false;
   expandedMenus: { [key: string]: boolean } = {}; // Control de submenús abiertos
   constructor(private authService: AuthService, private router: Router) {}
+
+  ngOnInit(): void {
+    this.nombreUsuario = this.authService.getNombreUsuario();
+  }
 
   toggleSidebar() {
     this.isSidebarClosed = !this.isSidebarClosed;

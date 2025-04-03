@@ -1,0 +1,54 @@
+<div class="container p-4 bg-light shadow rounded">
+    <h2 class="mb-4 text-center text-primary">Editar Proveedor</h2>
+    <form [formGroup]="proveedorForm" (ngSubmit)="onActualizar()">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label>RUC:</label>
+            <input type="text" class="form-control" formControlName="ruc">
+            <small *ngIf="proveedorForm.get('ruc')?.errors?.['pattern']" class="text-danger">
+              Deben ser 11 dígitos
+            </small>
+          </div>
+          
+          <div class="mb-3">
+            <label>Empresa:</label>
+            <input type="text" class="form-control" formControlName="empresa">
+          </div>
+          <div class="mb-3">
+            <label>Representante:</label>
+            <input type="text" class="form-control" formControlName="representante">
+          </div>
+        </div>
+  
+        <div class="col-md-6">
+          
+          
+          <div class="mb-3">
+            <label>Teléfono:</label>
+            <input type="text" class="form-control" formControlName="telefono">
+          </div>
+          
+          <div class="mb-3">
+            <label>Correo:</label>
+            <input type="email" class="form-control" formControlName="correo">
+          </div>
+          
+          <div class="mb-3">
+            <label>Estado:</label>
+            <select class="form-select" formControlName="estado">
+              <option [value]="true">Activo</option>
+              <option [value]="false">Inactivo</option>
+            </select>
+          </div>
+        </div>
+      </div>
+  
+      <div class="text-center mt-4">
+        <button type="submit" class="btn btn-primary me-2" [disabled]="!proveedorForm.valid">
+          Actualizar
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="onCancelar()">Cancelar</button>
+      </div>
+    </form>
+  </div>
