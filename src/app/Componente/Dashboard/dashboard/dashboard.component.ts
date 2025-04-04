@@ -18,11 +18,13 @@ import { Router } from '@angular/router';
 export class DashboardComponent implements OnInit{
   nombreUsuario: string | null = '';
   isSidebarClosed = false;
+  role: string | null = ''; // Variable para almacenar el rol del usuario
   expandedMenus: { [key: string]: boolean } = {}; // Control de submenús abiertos
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     this.nombreUsuario = this.authService.getNombreUsuario();
+    this.role = this.authService.getRole();
   }
 
   toggleSidebar() {
@@ -35,5 +37,8 @@ export class DashboardComponent implements OnInit{
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+  hasRole(...roles: string[]): boolean {
+    return roles.includes(this.role ?? '');
   }
 }

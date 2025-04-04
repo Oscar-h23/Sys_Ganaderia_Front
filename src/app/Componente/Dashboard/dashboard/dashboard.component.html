@@ -6,85 +6,84 @@
       <!-- 🏠 Inicio -->
       <li><a routerLink="/dashboard/inicio"><mat-icon>dashboard</mat-icon><span> Inicio</span></a></li>
 
-      <!-- 🔹 Administración -->
-      <li>
+      <!-- 🔹 Administración (solo ADMIN) -->
+      <li *ngIf="hasRole('ADMIN')">
         <a (click)="toggleSubMenu('administracion')">
           <mat-icon>settings</mat-icon>
           <span> Administración</span>
           <mat-icon class="arrow" [class.rotated]="expandedMenus['administracion']">expand_more</mat-icon>
         </a>
       </li>
-      <ul *ngIf="expandedMenus['administracion']" class="submenu">
+      <ul *ngIf="hasRole('ADMIN') && expandedMenus['administracion']" class="submenu">
         <li><a routerLink="/dashboard/usuario"><mat-icon>account_circle</mat-icon> Usuarios</a></li>
         <li><a routerLink="/dashboard/cliente"><mat-icon>person_add</mat-icon> Clientes</a></li>
         <li><a routerLink="/dashboard/proveedor"><mat-icon>business</mat-icon> Proveedores</a></li>
       </ul>
 
-      <!-- 🏠 Infraestructura -->
-      <li>
+      <!-- 🏠 Infraestructura (ADMIN y GANADERO) -->
+      <li *ngIf="hasRole('ADMIN', 'GANADERO')">
         <a (click)="toggleSubMenu('infraestructura')">
           <mat-icon>home_work</mat-icon>
           <span> Infraestructura</span>
           <mat-icon class="arrow" [class.rotated]="expandedMenus['infraestructura']">expand_more</mat-icon>
         </a>
       </li>
-      <ul *ngIf="expandedMenus['infraestructura']" class="submenu">
+      <ul *ngIf="hasRole('ADMIN', 'GANADERO') && expandedMenus['infraestructura']" class="submenu">
         <li><a routerLink="/dashboard/establo"><mat-icon>home</mat-icon> Establo</a></li>
-       <!-- <li><a routerLink="/dashboard/corral"><mat-icon>nature</mat-icon> Corrales</a></li>-->
       </ul>
 
-      <!-- 🐄 Gestión del Ganado -->
-      <li>
+      <!-- 🐄 Gestión del Ganado (ADMIN y GANADERO) -->
+      <li *ngIf="hasRole('ADMIN', 'GANADERO')">
         <a (click)="toggleSubMenu('ganado')">
           <mat-icon>pets</mat-icon>
           <span> Gestión del Ganado</span>
           <mat-icon class="arrow" [class.rotated]="expandedMenus['ganado']">expand_more</mat-icon>
         </a>
       </li>
-      <ul *ngIf="expandedMenus['ganado']" class="submenu">
+      <ul *ngIf="hasRole('ADMIN', 'GANADERO') && expandedMenus['ganado']" class="submenu">
         <li><a routerLink="/dashboard/ganado"><mat-icon>playlist_add</mat-icon> Registro de Ganado</a></li>
         <li><a routerLink="/dashboard/historial-clinico"><mat-icon>history</mat-icon> Historial Clínico</a></li>
       </ul>
 
-      <!-- 🍽️ Alimentación -->
-      <li>
+      <!-- 🍽️ Alimentación (ADMIN y GANADERO) -->
+      <li *ngIf="hasRole('ADMIN', 'GANADERO')">
         <a (click)="toggleSubMenu('alimentacion')">
           <mat-icon>restaurant</mat-icon>
           <span> Alimentación</span>
           <mat-icon class="arrow" [class.rotated]="expandedMenus['alimentacion']">expand_more</mat-icon>
         </a>
       </li>
-      <ul *ngIf="expandedMenus['alimentacion']" class="submenu">
+      <ul *ngIf="hasRole('ADMIN', 'GANADERO') && expandedMenus['alimentacion']" class="submenu">
         <li><a routerLink="/dashboard/alimento"><mat-icon>fastfood</mat-icon> Alimentos</a></li>
         <li><a routerLink="/dashboard/registro-alimento"><mat-icon>local_dining</mat-icon> Registro de Alimentos</a></li>
       </ul>
 
-      <!-- 🏥 Salud Animal -->
-      <li>
+      <!-- 🏥 Salud Animal (ADMIN y VETERINARIO) -->
+      <li *ngIf="hasRole('ADMIN', 'VETERINARIO')">
         <a (click)="toggleSubMenu('salud')">
           <mat-icon>local_pharmacy</mat-icon>
           <span> Salud Animal</span>
           <mat-icon class="arrow" [class.rotated]="expandedMenus['salud']">expand_more</mat-icon>
         </a>
       </li>
-      <ul *ngIf="expandedMenus['salud']" class="submenu">
+      <ul *ngIf="hasRole('ADMIN', 'VETERINARIO') && expandedMenus['salud']" class="submenu">
         <li><a routerLink="/dashboard/medicina"><mat-icon>medication</mat-icon> Medicina</a></li>
         <li><a routerLink="/dashboard/registro-medicina"><mat-icon>medication_liquid</mat-icon> Registro de Medicina</a></li>
       </ul>
 
-      <!-- 💰 Comercialización -->
-      <li>
+      <!-- 💰 Ventas (ADMIN y GANADERO) -->
+      <li *ngIf="hasRole('ADMIN', 'GANADERO')">
         <a (click)="toggleSubMenu('ventas')">
           <mat-icon>sell</mat-icon>
           <span> Ventas</span>
           <mat-icon class="arrow" [class.rotated]="expandedMenus['ventas']">expand_more</mat-icon>
         </a>
       </li>
-      <ul *ngIf="expandedMenus['ventas']" class="submenu">
+      <ul *ngIf="hasRole('ADMIN', 'GANADERO') && expandedMenus['ventas']" class="submenu">
         <li><a routerLink="/dashboard/venta"><mat-icon>shopping_cart</mat-icon> Ventas</a></li>
       </ul>
 
-      <!-- Botón de Logout -->
+      <!-- Logout -->
       <li class="logout">
         <a (click)="logout()">
           <mat-icon>logout</mat-icon>
@@ -96,9 +95,9 @@
 
   <main class="content">
     <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="fw-bold text-primary">Sistema ganadero</h4>
-    <span class="badge bg-secondary fs-6">Usuario: {{ nombreUsuario }}</span>
-  </div>
+      <h4 class="fw-bold text-primary">Sistema ganadero</h4>
+      <span class="badge bg-secondary fs-6">Usuario: {{ nombreUsuario }}</span>
+    </div>
     <router-outlet></router-outlet>
   </main>
 </div>

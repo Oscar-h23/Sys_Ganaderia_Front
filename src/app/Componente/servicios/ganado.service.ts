@@ -16,6 +16,11 @@ export class GanadoService {
   getGanados(): Observable<Ganado[]> {
     return this.http.get<Ganado[]>(this.apiUrl);
   }
+  // Obtener el ganado de un corral específico
+  getGanadoPorCorral(corralId: number): Observable<Ganado[]> {
+  return this.http.get<Ganado[]>(`${this.apiUrl}/corral/${corralId}`);
+  }
+
 
   // Obtener corrales por establo
   getCorralesPorEstablo(establoId: number): Observable<Corral[]> {
